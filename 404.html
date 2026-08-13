@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <title>3종목 다음 거래일 가격 예측</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f9fafb;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #dbe2ea;
+      --accent: #1f6feb;
+      --accent-soft: #e8f1ff;
+      --warning: #fff7df;
+      --warning-border: #e5b94f;
+      --info: #eaf4ff;
+      --info-border: #7ab8f5;
+      --neutral: #f4f5f7;
+      --line: #2368c4;
+      --grid: #d9e0e8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --panel: #161b22;
+        --panel-soft: #1c2128;
+        --text: #f0f6fc;
+        --muted: #9da7b3;
+        --border: #30363d;
+        --accent: #58a6ff;
+        --accent-soft: #12243a;
+        --warning: #352b12;
+        --warning-border: #8a6d1f;
+        --info: #102b43;
+        --info-border: #28679a;
+        --neutral: #20262d;
+        --line: #58a6ff;
+        --grid: #30363d;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .top-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .top h1 { font-size: 18px; margin: 0; }
+    .nav { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel-soft);
+      font-size: 14px;
+    }
+    .page { max-width: 1180px; margin: 0 auto; padding: 24px 20px 60px; }
+    .intro { margin-bottom: 20px; }
+    .intro h1 { margin: 0 0 6px; font-size: clamp(24px, 4vw, 38px); }
+    .small { color: var(--muted); font-size: 13px; }
+    .asset-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: clamp(18px, 3vw, 30px);
+      margin: 20px 0;
+      box-shadow: 0 8px 28px rgba(0,0,0,.05);
+      scroll-margin-top: 88px;
+    }
+    .asset-heading { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+    h2 { margin: 0 0 6px; font-size: 27px; }
+    h2 span { color: var(--muted); font-size: 16px; font-weight: 600; }
+    h3 { margin: 24px 0 10px; font-size: 17px; }
+    .target { font-size: 16px; }
+    .badge { background: var(--accent-soft); color: var(--accent); padding: 7px 11px; border-radius: 999px; font-weight: 700; }
+    .hero {
+      margin: 18px 0;
+      padding: 20px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    }
+    .hero-label { font-weight: 700; color: var(--accent); }
+    .hero-price { font-size: clamp(30px, 6vw, 52px); line-height: 1.08; font-weight: 800; margin: 6px 0; }
+    .hero-sub { color: var(--muted); }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 14px 0; }
+    .metric { background: var(--panel-soft); border: 1px solid var(--border); border-radius: 13px; padding: 14px; min-height: 98px; }
+    .metric-label { color: var(--muted); font-size: 13px; min-height: 22px; }
+    .metric-value { font-size: 22px; font-weight: 750; margin-top: 7px; }
+    .metric-delta { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .range { margin: 10px 0; padding: 12px 14px; background: var(--panel-soft); border-radius: 12px; border: 1px solid var(--border); }
+    .notice { margin: 14px 0; padding: 13px 15px; border-radius: 12px; border: 1px solid var(--border); }
+    .notice.warning { background: var(--warning); border-color: var(--warning-border); }
+    .notice.info { background: var(--info); border-color: var(--info-border); }
+    .notice.neutral { background: var(--neutral); }
+    details { border-top: 1px solid var(--border); margin-top: 18px; padding-top: 12px; }
+    summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+    .details-body { padding: 10px 0 4px; }
+    .table-scroll { overflow-x: auto; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; font-size: 14px; }
+    th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    th { color: var(--muted); font-weight: 650; }
+    .chart-wrap { width: 100%; margin-top: 10px; overflow: hidden; }
+    .chart-wrap svg { width: 100%; height: auto; display: block; }
+    .chart-line { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-grid { stroke: var(--grid); stroke-width: 1; }
+    .chart-label { fill: var(--muted); font-size: 11px; }
+    .empty { color: var(--muted); padding: 10px 0; }
+    ul { padding-left: 22px; }
+    footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <h1>다음 거래일 가격 예측 · Public</h1>
+      <nav class="nav"><a href="#skhynix">SK하이닉스</a><a href="#samsung">삼성전자</a><a href="#nvidia">엔비디아</a></nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="intro">
+      <h1>3종목 다음 거래일 가격 예측</h1>
+      <div>SK하이닉스 중심 · 삼성전자 · 엔비디아 · 조회 전용 공개 스냅샷</div>
+      <div class="small">게시 시각 2026-08-13 10:47:30 KST · 기준 시간대 Asia/Seoul</div>
+      <div class="notice neutral">
+        이 페이지는 관리자 PC가 마지막으로 게시한 읽기 전용 스냅샷입니다.
+        PC가 꺼져 있어도 페이지는 계속 열리지만, PC가 꺼져 있는 동안에는 새 학습·채점·장전 업데이트가 생성되지 않습니다.
+        주문 및 자동매매 기능은 없습니다.
+      </div>
+    </div>
+
+    
+        <section id="skhynix" class="asset-card">
+          <div class="asset-heading">
+            <div>
+              <h2>SK하이닉스 <span>000660.KS</span></h2>
+              <div class="small">저장된 다음 거래일 공식 예측을 찾지 못했습니다.</div>
+            </div>
+          </div>
+          
+    <div class="chart-wrap">
+      <svg viewBox="0 0 960 260" role="img" aria-label="최근 확정 장 마감 가격 차트">
+        <line x1="72" y1="22.0" x2="942" y2="22.0" class="chart-grid" /><text x="62" y="26.0" text-anchor="end" class="chart-label">3,087,970.79</text><line x1="72" y1="70.5" x2="942" y2="70.5" class="chart-grid" /><text x="62" y="74.5" text-anchor="end" class="chart-label">2,475,451.66</text><line x1="72" y1="119.0" x2="942" y2="119.0" class="chart-grid" /><text x="62" y="123.0" text-anchor="end" class="chart-label">1,862,932.53</text><line x1="72" y1="167.5" x2="942" y2="167.5" class="chart-grid" /><text x="62" y="171.5" text-anchor="end" class="chart-label">1,250,413.40</text><line x1="72" y1="216.0" x2="942" y2="216.0" class="chart-grid" /><text x="62" y="220.0" text-anchor="end" class="chart-label">637,894.27</text>
+        <polyline points="72.0,197.0 79.3,195.9 86.6,191.5 93.9,191.4 101.2,187.1 108.6,186.1 115.9,179.5 123.2,182.5 130.5,192.2 137.8,199.3 145.1,192.0 152.4,193.4 159.7,200.3 167.0,192.2 174.4,190.9 181.7,192.9 189.0,194.5 196.3,189.4 203.6,189.7 210.9,182.9 218.2,186.3 225.5,186.8 232.8,192.6 240.2,188.4 247.5,187.7 254.8,192.6 262.1,192.6 269.4,197.4 276.7,202.6 284.0,195.5 291.3,200.8 298.6,197.2 305.9,196.4 313.3,194.0 320.6,184.7 327.9,187.5 335.2,185.2 342.5,184.2 349.8,179.2 357.1,176.6 364.4,175.1 371.7,177.2 379.1,174.2 386.4,169.6 393.7,169.7 401.0,169.5 408.3,169.8 415.6,164.2 422.9,163.6 430.2,164.1 437.5,164.7 444.9,152.0 452.2,139.8 459.5,135.6 466.8,133.0 474.1,117.7 481.4,121.2 488.7,110.1 496.0,110.5 503.3,122.5 510.7,120.8 518.0,128.4 525.3,128.4 532.6,112.9 539.9,112.8 547.2,104.1 554.5,88.9 561.8,85.3 569.1,81.8 576.5,79.4 583.8,79.6 591.1,84.6 598.4,102.6 605.7,115.2 613.0,91.1 620.3,104.3 627.6,100.1 634.9,96.3 642.3,85.3 649.6,77.9 656.9,66.9 664.2,53.9 671.5,47.7 678.8,35.4 686.1,64.2 693.4,59.0 700.7,35.5 708.1,54.9 715.4,58.4 722.7,56.7 730.0,63.8 737.3,93.3 744.6,74.5 751.9,81.0 759.2,92.2 766.5,102.1 773.8,93.4 781.2,93.9 788.5,120.4 795.8,115.0 803.1,101.7 810.4,120.7 817.7,126.8 825.0,121.1 832.3,121.6 839.6,114.6 847.0,127.2 854.3,122.7 861.6,143.8 868.9,155.6 876.2,161.8 883.5,130.5 890.8,142.4 898.1,141.6 905.4,134.4 912.8,148.1 920.1,153.9 927.4,154.1 934.7,153.7 942.0,147.4" class="chart-line" />
+        <text x="72" y="248" text-anchor="start" class="chart-label">2026-02-13</text>
+        <text x="507.0" y="248" text-anchor="middle" class="chart-label">2026-05-18</text>
+        <text x="942" y="248" text-anchor="end" class="chart-label">2026-08-12</text>
+      </svg>
+    </div>
+    <div class="small">최근 120거래일의 확정 장 마감 가격만 표시합니다.</div>
+    
+        </section>
+        
+        <section id="samsung" class="asset-card">
+          <div class="asset-heading">
+            <div>
+              <h2>삼성전자 <span>005930.KS</span></h2>
+              <div class="small">저장된 다음 거래일 공식 예측을 찾지 못했습니다.</div>
+            </div>
+          </div>
+          
+    <div class="chart-wrap">
+      <svg viewBox="0 0 960 260" role="img" aria-label="최근 확정 장 마감 가격 차트">
+        <line x1="72" y1="22.0" x2="942" y2="22.0" class="chart-grid" /><text x="62" y="26.0" text-anchor="end" class="chart-label">377,707.44</text><line x1="72" y1="70.5" x2="942" y2="70.5" class="chart-grid" /><text x="62" y="74.5" text-anchor="end" class="chart-label">321,132.84</text><line x1="72" y1="119.0" x2="942" y2="119.0" class="chart-grid" /><text x="62" y="123.0" text-anchor="end" class="chart-label">264,558.23</text><line x1="72" y1="167.5" x2="942" y2="167.5" class="chart-grid" /><text x="62" y="171.5" text-anchor="end" class="chart-label">207,983.63</text><line x1="72" y1="216.0" x2="942" y2="216.0" class="chart-grid" /><text x="62" y="220.0" text-anchor="end" class="chart-label">151,409.02</text>
+        <polyline points="72.0,191.0 79.3,183.4 86.6,183.3 93.9,180.9 101.2,174.9 108.6,171.9 115.9,159.5 123.2,160.8 130.5,179.1 137.8,198.6 145.1,182.1 152.4,185.0 159.7,197.5 167.0,185.2 174.4,183.4 181.7,185.2 189.0,189.0 196.3,184.5 203.6,180.1 210.9,167.6 218.2,174.5 225.5,175.4 232.8,186.6 240.2,183.7 247.5,184.3 254.8,191.9 262.1,191.9 269.4,194.8 276.7,202.6 284.0,183.4 291.3,193.0 298.6,186.4 305.9,180.4 313.3,177.5 320.6,165.5 327.9,171.1 335.2,169.4 342.5,173.7 349.8,169.0 357.1,165.1 364.4,159.5 371.7,160.8 379.1,162.1 386.4,158.3 393.7,159.5 401.0,153.6 408.3,157.8 415.6,153.6 422.9,155.7 430.2,152.3 437.5,157.0 444.9,146.7 452.2,118.0 459.5,113.3 466.8,115.9 474.1,101.3 481.4,106.9 488.7,102.6 496.0,92.3 503.3,114.2 510.7,105.2 518.0,109.9 525.3,109.5 532.6,89.3 539.9,95.3 547.2,89.8 554.5,82.9 561.8,89.3 569.1,74.3 576.5,46.9 583.8,37.1 591.1,44.8 598.4,64.1 605.7,92.8 613.0,70.1 620.3,86.8 627.6,89.8 634.9,69.6 642.3,57.2 649.6,52.1 656.9,49.1 664.2,35.4 671.5,42.7 678.8,43.1 686.1,80.3 693.4,54.2 700.7,38.8 708.1,55.1 715.4,68.9 722.7,59.5 730.0,76.2 737.3,100.6 744.6,80.5 751.9,73.2 759.2,92.0 766.5,107.9 773.8,107.5 781.2,101.5 788.5,127.6 795.8,120.3 803.1,106.2 810.4,127.2 817.7,136.6 825.0,123.8 832.3,122.5 839.6,114.3 847.0,131.9 854.3,128.1 861.6,157.2 868.9,167.1 876.2,168.3 883.5,120.8 890.8,140.5 898.1,140.1 905.4,134.9 912.8,148.2 920.1,147.8 927.4,148.6 934.7,140.5 942.0,126.8" class="chart-line" />
+        <text x="72" y="248" text-anchor="start" class="chart-label">2026-02-13</text>
+        <text x="507.0" y="248" text-anchor="middle" class="chart-label">2026-05-18</text>
+        <text x="942" y="248" text-anchor="end" class="chart-label">2026-08-12</text>
+      </svg>
+    </div>
+    <div class="small">최근 120거래일의 확정 장 마감 가격만 표시합니다.</div>
+    
+        </section>
+        
+    <section id="nvidia" class="asset-card">
+      <div class="asset-heading">
+        <div>
+          <h2>엔비디아 <span>NVDA</span></h2>
+          <div class="target">공식 예측 대상: <strong>2026-08-13 장 마감 가격</strong></div>
+          <div class="small">최근 가격 기준일 2026-08-12 · 입력 확정 2026-08-13T05:00:00+09:00</div>
+        </div>
+        <div class="badge">보합 예상</div>
+      </div>
+
+      <div class="notice warning">검증 구간에서 방향 확률과 수익률 예측이 단순 기준을 안정적으로 개선하지 못했습니다. 아래 값은 실험적 참고값입니다.</div>
+      
+      
+
+      <div class="hero">
+        <div class="hero-label">공식 보합 예상</div>
+        <div class="hero-price">$224.09</div>
+        <div class="hero-sub">2026-08-12 장 마감 가격보다
+        +$0.00 (+0.00%)</div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric"><div class="metric-label">최근 장 마감 가격</div><div class="metric-value">$224.09</div></div>
+        <div class="metric"><div class="metric-label">2026-08-13 공식 예측값</div><div class="metric-value">$224.09</div><div class="metric-delta">+0.00%</div></div>
+        <div class="metric"><div class="metric-label">2026-08-13 2거래일 사전 참고값</div><div class="metric-value">$217.50</div><div class="metric-delta">+0.00%</div></div>
+        <div class="metric"><div class="metric-label">기준 상승 빈도</div><div class="metric-value">53.2%</div></div>
+        <div class="metric"><div class="metric-label">실전 신뢰도</div><div class="metric-value">검증 중</div></div>
+      </div>
+
+      <div class="range"><strong>2026-08-13 80% 예상 가격 범위:</strong>
+      $217.42 ~ $230.76
+      (-2.98% ~ +2.98%)</div>
+      <div class="range"><strong>2026-08-13 80% 예상 가격 범위:</strong> $208.66 ~ $226.90 (-4.06% ~ +4.32%)</div>
+
+      <h3>주요 이유</h3>
+      <ul><li>검증 구간에서 추가 예측력이 확인되지 않아 개별 특징 신호를 공식 예측에 반영하지 않았습니다.</li></ul>
+
+      <h3>자동 채점 성적</h3>
+      <div class="metrics-grid"><div class="metric"><div class="metric-label">누적 채점</div><div class="metric-value">15회</div></div><div class="metric"><div class="metric-label">최근 15회 방향 적중률</div><div class="metric-value">53.3%</div></div><div class="metric"><div class="metric-label">최근 15회 평균 가격 오차</div><div class="metric-value">2.42%</div></div><div class="metric"><div class="metric-label">최근 15회 범위 적중률</div><div class="metric-value">80.0%</div></div></div><div class="small">실전 채점 표본이 20회 미만이어서 현재 수치는 크게 흔들릴 수 있습니다.</div><div class="small">최근 장 마감 가격 유지 기준보다 평균 가격 오차가 6.7% 높았습니다.</div>
+      
+        <div class="notice neutral">
+          <strong>가장 최근 예측 결과</strong><br>
+          2026-08-12 · 예상 $217.50
+          → 실제 $224.09<br>
+          <span class="small">예상과 실제 차이 +$6.59 ·
+          가격 오차 3.03% ·
+          방향 맞음 ·
+          예상 범위 밖</span>
+        </div>
+        
+
+      <details>
+        <summary>예측 방식별 실전 비교</summary>
+        <div class="details-body">
+          <div class="small">최근 종가 유지·원시 모델·검증 보정 공식값·장 시작 전 업데이트를 동일한 실제 종가로 따로 채점합니다.</div>
+          <div class="table-scroll"><table><thead><tr><th>예측 방식</th><th>누적 채점</th><th>최근 표본</th><th>평균 가격 오차</th><th>방향 적중률</th><th>범위 적중률</th></tr></thead><tbody><tr><td>최근 종가 유지</td><td>15</td><td>15</td><td>2.27%</td><td>-</td><td>-</td></tr><tr><td>검증 보정 공식</td><td>15</td><td>15</td><td>2.42%</td><td>53.3%</td><td>80.0%</td></tr><tr><td>장 시작 전 업데이트</td><td>8</td><td>8</td><td>2.15%</td><td>37.5%</td><td>75.0%</td></tr><tr><td>원시 모델</td><td>15</td><td>15</td><td>2.38%</td><td>40.0%</td><td>-</td></tr></tbody></table></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>가격 차트와 최근 채점 결과</summary>
+        <div class="details-body">
+          
+    <div class="chart-wrap">
+      <svg viewBox="0 0 960 260" role="img" aria-label="최근 확정 장 마감 가격 차트">
+        <line x1="72" y1="22.0" x2="942" y2="22.0" class="chart-grid" /><text x="62" y="26.0" text-anchor="end" class="chart-label">$241.10</text><line x1="72" y1="70.5" x2="942" y2="70.5" class="chart-grid" /><text x="62" y="74.5" text-anchor="end" class="chart-label">$220.66</text><line x1="72" y1="119.0" x2="942" y2="119.0" class="chart-grid" /><text x="62" y="123.0" text-anchor="end" class="chart-label">$200.22</text><line x1="72" y1="167.5" x2="942" y2="167.5" class="chart-grid" /><text x="62" y="171.5" text-anchor="end" class="chart-label">$179.78</text><line x1="72" y1="216.0" x2="942" y2="216.0" class="chart-grid" /><text x="62" y="220.0" text-anchor="end" class="chart-label">$159.34</text>
+        <polyline points="72.0,144.2 79.3,140.1 86.6,137.0 93.9,130.6 101.2,155.9 108.6,174.2 115.9,161.6 123.2,167.4 130.5,160.3 137.8,159.6 145.1,172.7 152.4,161.2 159.7,156.2 167.0,153.2 174.4,160.0 181.7,166.9 189.0,159.8 196.3,162.9 203.6,166.5 210.9,170.9 218.2,184.8 225.5,177.8 232.8,178.9 240.2,170.6 247.5,188.2 254.8,197.1 262.1,202.6 269.4,180.7 276.7,177.5 284.0,173.7 291.3,173.1 298.6,172.0 305.9,162.5 313.3,158.2 320.6,147.0 327.9,145.4 335.2,128.3 342.5,122.8 349.8,124.0 357.1,116.1 364.4,115.2 371.7,120.4 379.1,114.2 386.4,120.9 393.7,100.5 401.0,80.7 408.3,88.9 415.6,98.2 422.9,121.1 430.2,123.8 437.5,123.7 444.9,128.4 452.2,101.5 459.5,92.8 466.8,84.1 474.1,74.0 481.4,70.8 488.7,58.9 496.0,35.4 503.3,60.1 510.7,67.2 518.0,71.2 525.3,64.5 532.6,73.8 539.9,83.7 547.2,84.9 554.5,90.2 561.8,86.3 569.1,93.7 576.5,62.3 583.8,66.0 591.1,85.1 598.4,75.3 605.7,107.4 613.0,99.0 620.3,100.1 627.6,118.5 634.9,108.0 642.3,107.2 649.6,90.0 656.9,101.9 664.2,108.5 671.5,94.2 678.8,99.0 686.1,119.4 693.4,121.9 700.7,129.6 708.1,137.2 715.4,131.5 722.7,119.3 730.0,125.3 737.3,131.8 744.6,130.1 751.9,126.8 759.2,109.8 766.5,112.9 773.8,93.5 781.2,111.2 788.5,91.5 795.8,89.9 803.1,102.0 810.4,112.9 817.7,111.7 825.0,102.2 832.3,90.9 839.6,98.7 847.0,103.3 854.3,127.8 861.6,126.6 868.9,143.2 876.2,131.3 883.5,117.7 890.8,103.8 898.1,91.2 905.4,73.9 912.8,74.5 920.1,62.7 927.4,77.9 934.7,78.0 942.0,62.4" class="chart-line" />
+        <text x="72" y="248" text-anchor="start" class="chart-label">2026-02-20</text>
+        <text x="507.0" y="248" text-anchor="middle" class="chart-label">2026-05-18</text>
+        <text x="942" y="248" text-anchor="end" class="chart-label">2026-08-12</text>
+      </svg>
+    </div>
+    <div class="small">최근 120거래일의 확정 장 마감 가격만 표시합니다.</div>
+    
+          <h3>예상 가격과 실제 장 마감 가격 비교</h3>
+          <div class="table-scroll"><table><thead><tr><th>거래일</th><th>예상 장 마감 가격</th><th>실제 장 마감 가격</th><th>가격 오차</th><th>방향</th><th>예상 범위</th></tr></thead><tbody><tr><td>2026-08-12</td><td>$217.50</td><td>$224.09</td><td>3.03%</td><td>적중</td><td>이탈</td></tr><tr><td>2026-08-11</td><td>$217.55</td><td>$217.50</td><td>0.02%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-08-10</td><td>$223.96</td><td>$217.55</td><td>2.86%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-08-07</td><td>$218.99</td><td>$223.96</td><td>2.27%</td><td>적중</td><td>포함</td></tr><tr><td>2026-08-06</td><td>$219.22</td><td>$218.99</td><td>0.10%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-08-05</td><td>$211.94</td><td>$219.22</td><td>3.43%</td><td>적중</td><td>이탈</td></tr><tr><td>2026-08-04</td><td>$206.64</td><td>$211.94</td><td>2.56%</td><td>적중</td><td>포함</td></tr><tr><td>2026-08-03</td><td>$200.75</td><td>$206.64</td><td>2.93%</td><td>적중</td><td>포함</td></tr><tr><td>2026-07-31</td><td>$193.30</td><td>$200.75</td><td>3.82%</td><td>적중</td><td>포함</td></tr><tr><td>2026-07-30</td><td>$192.85</td><td>$195.04</td><td>1.15%</td><td>적중</td><td>포함</td></tr></tbody></table></div>
+        </div>
+      </details>
+
+      
+    <details>
+      <summary>모델 학습·검증 정보</summary>
+      <div class="details-body">
+        <p>1거래일 앞 모델 학습 시각: 2026-08-13T07:11:57.130330+09:00<br>
+        학습 feature 기간: 2016-08-29 ~ 2026-08-11<br>
+        마지막 학습 label 거래일: 2026-08-12<br>
+        이번 예측 feature 기준: 2026-08-12<br>
+        총 학습 표본: 2,501개<br>
+        확장창 검증 표본: 189개<br>
+        방향 정확도: 51.9%
+        (단순 기준 51.9%)<br>
+        확률 Brier 점수: 0.2504
+        (단순 기준 0.2504)<br>
+        수익률 MAE: 1.899%
+        (0% 예측 기준 1.899%)<br>
+        80% 범위 검증 포함률:
+        79.9%<br>
+        확률 신뢰 가중치: 0% · 수익률 신뢰 가중치: 0%<br>
+        모델 자체 신뢰도: 낮음</p>
+      </div>
+    </details>
+    
+    </section>
+    
+
+    <footer>
+      실험적인 참고값이며 정확도, 수익 또는 특정 가격을 보장하지 않습니다.<br>
+      공개 페이지에는 모델 파일, SQLite DB, API 키를 포함하지 않습니다.
+    </footer>
+  </main>
+</body>
+</html>
