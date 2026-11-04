@@ -150,7 +150,7 @@
     <div class="intro">
       <h1>3종목 다음 거래일 가격 예측</h1>
       <div>SK하이닉스 중심 · 삼성전자 · 엔비디아 · 조회 전용 </div>
-      <div class="small">게시 시각 2026-11-05 07:11:22 KST · 기준 시간대 Asia/Seoul</div>
+      <div class="small">게시 시각 2026-11-05 07:17:33 KST · 기준 시간대 Asia/Seoul</div>
     </div>
 
     
@@ -374,18 +374,75 @@
     
     </section>
     
-        <section id="nvidia" class="asset-card">
-          <div class="asset-heading">
-            <div>
-              <h2>엔비디아 <span>NVDA</span></h2>
-              <div class="small">저장된 다음 거래일 공식 예측을 찾지 못했습니다.</div>
-            </div>
-          </div>
-          <div class="notice info"><strong>최근 시세 확인값 · $200.29</strong><br><span class="small">확인 시각 2026-11-05 05:59 KST · 출처 Yahoo Finance</span></div>
+    <section id="nvidia" class="asset-card">
+      <div class="asset-heading">
+        <div>
+          <h2>엔비디아 <span>NVDA</span></h2>
+          <div class="target">공식 예측 대상: <strong>2026-11-05 장 마감 가격</strong></div>
+          <div class="small">모델 입력 기준일 2026-11-04 · 입력 확정 2026-11-05T06:00:00+09:00</div>
+        </div>
+      </div>
+
+      <div class="notice info">2026-11-05 (1거래일): 검증된 가격 변화 신호가 없어 기준 종가를 사용합니다. 같은 가격을 유지할 것이라는 확신을 뜻하지 않습니다.</div><div class="notice info">2026-11-06 (2거래일): 검증된 가격 변화 신호가 없어 기준 종가를 사용합니다. 같은 가격을 유지할 것이라는 확신을 뜻하지 않습니다.</div><div class="notice info">현재가는 시세 정보입니다. 가격 변화 신호가 없어 현재가를 반복하는 장중 예상값은 표시하지 않습니다.</div><div class="notice info">두 기간의 검증된 신호가 모두 필요하므로 다음 거래일 장중 임시값은 표시하지 않습니다.</div><div class="notice info">기준 상승 빈도는 과거 검증 표본의 상승 비율이며, 이번 예측의 상승 확률이나 신뢰도가 아닙니다.</div><div class="notice info">1·2거래일은 마지막 확정 종가 기준입니다. 장중에는 첫 번째 목표일이 오늘일 수 있으며 주말·휴장일은 제외합니다.</div>
+      
+      
+
+      <div class="hero">
+        <div class="hero-label">검증된 신호 없음 · 종가 유지 기준</div>
+        <div class="hero-price">$200.13</div>
+        <div class="hero-sub">2026-11-04 모델 기준 장 마감 가격보다 +$0.00 (+0.00%)</div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric"><div class="metric-label">모델 기준 장 마감 가격</div><div class="metric-value">$200.13</div></div>
+        <div class="metric"><div class="metric-label">최근 시세 확인값</div><div class="metric-value">$200.29</div><div class="metric-delta">+0.08%</div></div>
+        <div class="metric"><div class="metric-label">2026-11-05 1거래일 종가 유지 기준값</div><div class="metric-value">$200.13</div><div class="metric-delta">+0.00%</div></div>
+        <div class="metric"><div class="metric-label">2026-11-06 2거래일 종가 유지 기준값</div><div class="metric-value">$200.13</div><div class="metric-delta">+0.00%</div></div>
+        
+        
+        <div class="metric"><div class="metric-label">기준 상승 빈도</div><div class="metric-value">52.4%</div></div>
+        <div class="metric"><div class="metric-label">실전 신뢰도</div><div class="metric-value">낮음</div></div>
+      </div>
+      <div class="small quote-status">시세 확인 2026-11-05 05:59 KST · Yahoo Finance · 장외/마감 후 최근 확인값</div>
+      
+
+      <div class="range"><strong>2026-11-05 80% 예상 가격 범위:</strong>
+      $194.15 ~ $206.64
+      (-2.99% ~ +3.25%)</div>
+      <div class="range"><strong>2026-11-06 80% 예상 가격 범위:</strong> $191.79 ~ $209.61 (-4.17% ~ +4.74%)</div>
+
+      <h3>주요 이유</h3>
+      <ul><li>검증 구간에서 추가 예측력이 확인되지 않아 개별 특징 신호를 공식 예측에 반영하지 않았습니다.</li></ul>
+
+      <h3>자동 채점 성적</h3>
+      <div class="metrics-grid"><div class="metric"><div class="metric-label">누적 채점</div><div class="metric-value">73회</div></div><div class="metric"><div class="metric-label">최근 30회 방향 적중률</div><div class="metric-value">40.0%</div></div><div class="metric"><div class="metric-label">최근 30회 평균 가격 오차</div><div class="metric-value">1.52%</div></div><div class="metric"><div class="metric-label">최근 30회 범위 적중률</div><div class="metric-value">80.0%</div></div></div><div class="small">최근 장 마감 가격 유지 기준보다 평균 가격 오차가 0.0% 낮았습니다.</div>
+      
+        <div class="notice neutral">
+          <strong>가장 최근 예측 결과</strong><br>
+          2026-11-04 · 예상 $206.69
+          → 실제 $200.13<br>
+          <span class="small">예상과 실제 차이 -$6.56 ·
+          가격 오차 3.17% ·
+          방향 빗나감 ·
+          예상 범위 밖</span>
+        </div>
+        
+
+      <details>
+        <summary>예측 방식별 실전 비교</summary>
+        <div class="details-body">
+          <div class="small">최근 종가 유지·원시 모델·검증 보정 공식값·장 시작 전 업데이트를 동일한 실제 종가로 따로 채점합니다.</div>
+          <div class="table-scroll"><table><thead><tr><th>예측 방식</th><th>누적 채점</th><th>최근 표본</th><th>평균 가격 오차</th><th>방향 적중률</th><th>범위 적중률</th></tr></thead><tbody><tr><td>최근 종가 유지</td><td>73</td><td>30</td><td>1.52%</td><td>-</td><td>-</td></tr><tr><td>검증 보정 공식</td><td>73</td><td>30</td><td>1.52%</td><td>40.0%</td><td>80.0%</td></tr><tr><td>장 시작 전 업데이트</td><td>61</td><td>30</td><td>1.43%</td><td>50.0%</td><td>83.3%</td></tr><tr><td>원시 모델</td><td>73</td><td>30</td><td>1.54%</td><td>56.7%</td><td>-</td></tr></tbody></table></div>
+        </div>
+      </details>
+
+      <details>
+        <summary>가격 차트와 최근 채점 결과</summary>
+        <div class="details-body">
           
     <div class="chart-wrap">
       <svg viewBox="0 0 960 260" role="img" aria-label="최근 확정 장 마감 가격 차트">
-        <line x1="72" y1="22.0" x2="942" y2="22.0" class="chart-grid" /><text x="62" y="26.0" text-anchor="end" class="chart-label">243.20</text><line x1="72" y1="70.5" x2="942" y2="70.5" class="chart-grid" /><text x="62" y="74.5" text-anchor="end" class="chart-label">228.86</text><line x1="72" y1="119.0" x2="942" y2="119.0" class="chart-grid" /><text x="62" y="123.0" text-anchor="end" class="chart-label">214.52</text><line x1="72" y1="167.5" x2="942" y2="167.5" class="chart-grid" /><text x="62" y="171.5" text-anchor="end" class="chart-label">200.18</text><line x1="72" y1="216.0" x2="942" y2="216.0" class="chart-grid" /><text x="62" y="220.0" text-anchor="end" class="chart-label">185.84</text>
+        <line x1="72" y1="22.0" x2="942" y2="22.0" class="chart-grid" /><text x="62" y="26.0" text-anchor="end" class="chart-label">$243.20</text><line x1="72" y1="70.5" x2="942" y2="70.5" class="chart-grid" /><text x="62" y="74.5" text-anchor="end" class="chart-label">$228.86</text><line x1="72" y1="119.0" x2="942" y2="119.0" class="chart-grid" /><text x="62" y="123.0" text-anchor="end" class="chart-label">$214.52</text><line x1="72" y1="167.5" x2="942" y2="167.5" class="chart-grid" /><text x="62" y="171.5" text-anchor="end" class="chart-label">$200.18</text><line x1="72" y1="216.0" x2="942" y2="216.0" class="chart-grid" /><text x="62" y="220.0" text-anchor="end" class="chart-label">$185.84</text>
         <polyline points="72.0,84.2 79.3,94.3 86.6,100.1 93.9,90.4 101.2,103.8 108.6,117.9 115.9,119.5 123.2,127.1 130.5,121.6 137.8,132.1 145.1,87.4 152.4,92.6 159.7,119.9 167.0,105.8 174.4,151.6 181.7,139.7 189.0,141.2 196.3,167.4 203.6,152.4 210.9,151.3 218.2,126.8 225.5,143.8 232.8,153.2 240.2,132.7 247.5,139.6 254.8,168.7 262.1,172.2 269.4,183.3 276.7,194.1 284.0,185.9 291.3,168.6 298.6,177.0 305.9,186.3 313.3,183.9 320.6,179.2 327.9,154.9 335.2,159.5 342.5,131.8 349.8,156.9 357.1,129.0 364.4,126.6 371.7,143.9 379.1,159.4 386.4,157.8 393.7,144.2 401.0,128.1 408.3,139.3 415.6,145.8 422.9,180.7 430.2,179.0 437.5,202.6 444.9,185.6 452.2,166.3 459.5,146.4 466.8,128.5 474.1,103.9 481.4,104.7 488.7,87.9 496.0,109.6 503.3,109.7 510.7,87.5 518.0,83.4 525.3,83.9 532.6,84.4 539.9,102.2 547.2,109.5 554.5,111.9 561.8,119.1 569.1,140.2 576.5,124.8 583.8,136.2 591.1,74.3 598.4,109.6 605.7,98.7 613.0,109.9 620.3,86.4 627.6,72.7 634.9,66.3 642.3,81.9 649.6,88.9 656.9,106.0 664.2,106.2 671.5,131.0 678.8,126.9 686.1,121.1 693.4,102.7 700.7,92.8 708.1,75.5 715.4,70.5 722.7,81.8 730.0,85.0 737.3,83.3 744.6,70.5 751.9,76.1 759.2,72.1 766.5,63.7 773.8,53.3 781.2,36.5 788.5,35.4 795.8,41.4 803.1,65.0 810.4,69.1 817.7,79.1 825.0,71.6 832.3,96.1 839.6,109.8 847.0,120.3 854.3,110.3 861.6,112.4 868.9,93.8 876.2,126.8 883.5,131.0 890.8,114.0 898.1,107.4 905.4,116.1 912.8,121.9 920.1,152.4 927.4,161.1 934.7,145.5 942.0,167.7" class="chart-line" />
         <text x="72" y="248" text-anchor="start" class="chart-label">2026-05-15</text>
         <text x="507.0" y="248" text-anchor="middle" class="chart-label">2026-08-12</text>
@@ -394,8 +451,39 @@
     </div>
     <div class="small">최근 120거래일의 확정 장 마감 가격만 표시합니다.</div>
     
-        </section>
-        
+          <h3>예상 가격과 실제 장 마감 가격 비교</h3>
+          <div class="table-scroll"><table><thead><tr><th>거래일</th><th>예상 장 마감 가격</th><th>실제 장 마감 가격</th><th>가격 오차</th><th>방향</th><th>예상 범위</th></tr></thead><tbody><tr><td>2026-11-04</td><td>$206.69</td><td>$200.13</td><td>3.17%</td><td>빗나감</td><td>이탈</td></tr><tr><td>2026-11-02</td><td>$204.64</td><td>$202.06</td><td>1.26%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-10-30</td><td>$213.66</td><td>$204.64</td><td>4.22%</td><td>빗나감</td><td>이탈</td></tr><tr><td>2026-10-29</td><td>$215.38</td><td>$213.66</td><td>0.80%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-10-28</td><td>$217.94</td><td>$215.38</td><td>1.17%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-10-27</td><td>$216.00</td><td>$217.94</td><td>0.90%</td><td>적중</td><td>포함</td></tr><tr><td>2026-10-26</td><td>$210.96</td><td>$216.00</td><td>2.39%</td><td>적중</td><td>포함</td></tr><tr><td>2026-10-23</td><td>$212.21</td><td>$210.96</td><td>0.59%</td><td>빗나감</td><td>포함</td></tr><tr><td>2026-10-22</td><td>$221.97</td><td>$212.21</td><td>4.40%</td><td>빗나감</td><td>이탈</td></tr><tr><td>2026-10-21</td><td>$216.47</td><td>$221.97</td><td>2.54%</td><td>적중</td><td>이탈</td></tr></tbody></table></div>
+        </div>
+      </details>
+
+      
+    <details>
+      <summary>모델 학습·검증 정보</summary>
+      <div class="details-body">
+        <p>1거래일 앞 모델 학습 시각: 2026-11-05T07:13:43.168536+09:00<br>
+        학습 feature 기간: 2016-11-21 ~ 2026-11-03<br>
+        마지막 학습 label 거래일: 2026-11-04<br>
+        이번 예측 feature 기준: 2026-11-04<br>
+        총 학습 표본: 2,501개<br>
+        확장창 검증 표본: 189개<br>
+        방향 정확도: 50.8%
+        (단순 기준 50.8%)<br>
+        확률 Brier 점수: 0.2511
+        (단순 기준 0.2511)<br>
+        수익률 MAE: 1.893%
+        (0% 예측 기준 1.893%)<br>
+        80% 범위 검증 포함률:
+        83.6%<br>
+        확률 신뢰 가중치: 0% · 수익률 신뢰 가중치: 0%<br>
+        모델 자체 신뢰도: 낮음</p>
+        <strong>h1 수익률 검증 상세</strong>
+        <p>후보 가중치 65.000% · 최종 가중치 0.000%<br>Calibration (188개): baseline 1.588% / raw 1.577% / candidate 1.568% / 개선율 1.212% / skill 5.299%<br>Calibration 예측 기준일: 2025-05-05 ~ 2026-02-02<br>Calibration 정답 종가일: 2025-05-06 ~ 2026-02-03<br>Evaluation (189개): baseline 1.893% / raw 1.921% / candidate 1.897% / 개선율 -0.233% / skill 0.000%<br>Evaluation 예측 기준일: 2026-02-04 ~ 2026-11-03<br>Evaluation 정답 종가일: 2026-02-05 ~ 2026-11-04<br>검증 경계 겹침 제외: 1개 · 학습/검증 간격: 1거래일<br>판정: Evaluation 기준 미달</p>
+        <strong>h2 수익률 검증 상세</strong><p>후보 가중치 55.000% · 최종 가중치 0.000%<br>Calibration (187개): baseline 2.128% / raw 2.148% / candidate 2.102% / 개선율 1.247% / skill 6.183%<br>Calibration 예측 기준일: 2025-05-02 ~ 2026-01-29<br>Calibration 정답 종가일: 2025-05-06 ~ 2026-02-02<br>Evaluation (189개): baseline 2.707% / raw 3.038% / candidate 2.797% / 개선율 -3.315% / skill 0.000%<br>Evaluation 예측 기준일: 2026-02-03 ~ 2026-11-02<br>Evaluation 정답 종가일: 2026-02-05 ~ 2026-11-04<br>검증 경계 겹침 제외: 2개 · 학습/검증 간격: 2거래일<br>판정: Evaluation 기준 미달</p>
+      </div>
+    </details>
+    
+    </section>
+    
 
     <footer>
       실험적인 참고값이며 정확도, 수익 또는 특정 가격을 보장하지 않습니다.<br>
